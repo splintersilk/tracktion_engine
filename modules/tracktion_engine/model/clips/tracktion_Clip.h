@@ -412,9 +412,11 @@ protected:
 
     juce::ListenerList<Listener> listeners;
 
+public:
     /** Sets a new source file for this clip. */
     void setCurrentSourceFile (const juce::File&);
 
+protected:
     /** Moves this clip to a new ClipTrack. */
     virtual void setTrack (ClipTrack*);
 
