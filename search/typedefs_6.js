@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['threadpoolcreator_12351',['ThreadPoolCreator',['../classtracktion__graph_1_1LockFreeMultiThreadedNodePlayer.html#a59df919c6b82bef74d5b58e57590aed7',1,'tracktion_graph::LockFreeMultiThreadedNodePlayer']]]
+  ['samplecount_12979',['SampleCount',['../namespacetracktion_1_1engine.html#a85052134975073481bd9888cbc71f3c4',1,'tracktion::SampleCount()'],['../namespacetracktion_1_1engine.html#a85052134975073481bd9888cbc71f3c4',1,'tracktion::engine::SampleCount()']]],
+  ['samplerange_12980',['SampleRange',['../namespacetracktion_1_1engine.html#a8944ee32cc6ed4eb531572d627f9538f',1,'tracktion::SampleRange()'],['../namespacetracktion_1_1engine.html#a8944ee32cc6ed4eb531572d627f9538f',1,'tracktion::engine::SampleRange()']]],
+  ['scopedlocktype_12981',['ScopedLockType',['../structtracktion_1_1engine_1_1SelectableList.html#aa0e5fa7a2aa62bd2db3d6103e2234a38',1,'tracktion::engine::SelectableList::ScopedLockType()'],['../classtracktion_1_1engine_1_1ValueTreeObjectList.html#a8da8a7eeddfc212e9d275380b655c4e7',1,'tracktion::engine::ValueTreeObjectList::ScopedLockType()']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mpesourceid_12347',['MPESourceID',['../structtracktion__engine_1_1MidiMessageArray.html#a36e4be4a072539ee901334469a9d40ca',1,'tracktion_engine::MidiMessageArray']]]
+  ['idmap_12975',['IDMap',['../structtracktion_1_1engine_1_1EditItemID.html#ad2cbbf762fd20937f7021641238019c7',1,'tracktion::engine::EditItemID']]]
 ];

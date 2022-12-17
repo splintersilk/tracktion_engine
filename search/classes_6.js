@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['gainnode_6396',['GainNode',['../classtracktion__graph_1_1GainNode.html',1,'tracktion_graph']]],
-  ['generatorjob_6397',['GeneratorJob',['../structtracktion__engine_1_1AudioProxyGenerator_1_1GeneratorJob.html',1,'tracktion_engine::AudioProxyGenerator']]],
-  ['globalmacros_6398',['GlobalMacros',['../structtracktion__engine_1_1Edit_1_1GlobalMacros.html',1,'tracktion_engine::Edit']]],
-  ['groovetemplate_6399',['GrooveTemplate',['../classtracktion__engine_1_1GrooveTemplate.html',1,'tracktion_engine']]],
-  ['groovetemplatemanager_6400',['GrooveTemplateManager',['../classtracktion__engine_1_1GrooveTemplateManager.html',1,'tracktion_engine']]],
-  ['group_6401',['Group',['../structtracktion__engine_1_1VSTXML_1_1Group.html',1,'tracktion_engine::VSTXML']]]
+  ['gainnode_6789',['GainNode',['../classtracktion_1_1graph_1_1GainNode.html',1,'tracktion::GainNode'],['../classtracktion_1_1graph_1_1GainNode.html',1,'tracktion::graph::GainNode']]],
+  ['generatorjob_6790',['GeneratorJob',['../structtracktion_1_1engine_1_1AudioProxyGenerator_1_1GeneratorJob.html',1,'tracktion::engine::AudioProxyGenerator']]],
+  ['globalmacros_6791',['GlobalMacros',['../structtracktion_1_1engine_1_1Edit_1_1GlobalMacros.html',1,'tracktion::engine::Edit']]],
+  ['groovetemplate_6792',['GrooveTemplate',['../classtracktion_1_1engine_1_1GrooveTemplate.html',1,'tracktion::engine::GrooveTemplate'],['../classtracktion_1_1engine_1_1GrooveTemplate.html',1,'tracktion::GrooveTemplate']]],
+  ['groovetemplatemanager_6793',['GrooveTemplateManager',['../classtracktion_1_1engine_1_1GrooveTemplateManager.html',1,'tracktion::engine::GrooveTemplateManager'],['../classtracktion_1_1engine_1_1GrooveTemplateManager.html',1,'tracktion::GrooveTemplateManager']]],
+  ['group_6794',['Group',['../structtracktion_1_1engine_1_1VSTXML_1_1Group.html',1,'tracktion::engine::VSTXML']]]
 ];
