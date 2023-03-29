@@ -348,7 +348,8 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
              || v.hasType (IDs::MIDICLIP)
              || v.hasType (IDs::STEPCLIP)
              || v.hasType (IDs::EDITCLIP)
-             || v.hasType (IDs::CHORDCLIP))
+             || v.hasType (IDs::CHORDCLIP)
+             || v.hasType (IDs::CONTAINERCLIP))
             restart();
     }
 
@@ -898,7 +899,7 @@ void Edit::removeZeroLengthClips()
                 clipsToRemove.add (c);
 
     for (auto& c : clipsToRemove)
-        c->removeFromParentTrack();
+        c->removeFromParent();
 }
 
 void Edit::initialiseTracks()
@@ -2585,7 +2586,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
     {
         auto& clips = t->getClips();
         for (int i = clips.size(); --i >= 0;)
-            clips[i]->removeFromParentTrack();
+            clips[i]->removeFromParent();
 
         jassert (t->getClips().size() == 0);
     }
@@ -2639,7 +2640,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
         track = drumTrack;
 
         if (auto firstClip = midiTrack->getClips().getFirst())
-            firstClip->moveToTrack (*track);
+            firstClip->moveTo (*track);
     }
 
     if (track->pluginList.size() < 3)
@@ -2777,7 +2778,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
     {
         auto& clips = t->getClips();
         for (int i = clips.size(); --i >= 0;)
-            clips[i]->removeFromParentTrack();
+            clips[i]->removeFromParent();
 
         jassert (t->getClips().size() == 0);
     }
@@ -2880,7 +2881,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
         const AudioFile af (engine, file);
         auto length = af.getLength();
 
-        if (auto wc = dynamic_cast<WaveAudioClip*> (audioTrack->insertNewClip (TrackItem::Type::wave, { TimePosition(), TimePosition::fromSeconds (1.0) }, nullptr)))
+        if (auto wc = dynamic_cast<WaveAudioClip*> (audioTrack->insertNewClip (TrackItem::Type::wave, { 0_tp, 1_tp }, nullptr)))
         {
             wc->setUsesProxy (false);
             wc->getSourceFileReference().setToDirectFileReference (file, false);
@@ -2894,6 +2895,8 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                    #endif
                     wc->setLoopInfo (af.getInfo().loopInfo);
                     wc->setTimeStretchMode (TimeStretcher::defaultMode);
+
+                    engine.getEngineBehaviour().newClipAdded (*wc, false);
                 }
 
                 auto& targetTempo = editToMatch->tempoSequence.getTempoAt (TimePosition::fromSeconds (0.01));
@@ -2903,6 +2906,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                 {
                     auto firstTempo = edit->tempoSequence.getTempo (0);
                     firstTempo->setBpm (targetTempo.getBpm());
+                    engine.getEngineBehaviour().newClipAdded (*wc, false);
 
                     edit->setTimecodeFormat (editToMatch->getTimecodeFormat());
                     AudioFileInfo wi = wc->getWaveInfo();
@@ -2924,14 +2928,15 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                 {
                     auto firstPitch = edit->pitchSequence.getPitch (0);
                     firstPitch->setPitch (targetPitch->getPitch());
+                    engine.getEngineBehaviour().newClipAdded (*wc, false);
 
                     edit->pitchSequence.copyFrom (editToMatch->pitchSequence);
                     wc->setAutoPitch (wc->getLoopInfo().getRootNote() != -1);
                 }
             }
 
-            const TimeRange timeRange (TimePosition(), TimeDuration::fromSeconds (length));
-            wc->setPosition ({ timeRange, TimeDuration() });
+            const TimeRange timeRange (0_tp, TimeDuration::fromSeconds (length));
+            wc->setPosition ({ timeRange, 0_td });
             edit->getTransport().setLoopRange (timeRange);
         }
     }

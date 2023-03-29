@@ -4,6 +4,34 @@
 
 
 ### Change
+Added a new ContainerClip type. To facilitate this, a new ClipOwner class has been created.
+
+#### Possible Issues
+You may need to fix code which passes `Track`s to functions, passing in a ClipOwner subclass like a ClipTrack instead.
+
+#### Workaround
+None.
+
+#### Rationale
+The changes required should be small but enable this new feature.
+
+---
+
+### Change
+Removed the fixed buffer size requirement in HostedAudioDeviceInterface for using the Engine inside a plugin.
+
+#### Possible Issues
+You may need to fix code which set the value of this member.
+
+#### Workaround
+None.
+
+#### Rationale
+With the audio playback rewite it's no longer required to have a fixed block size so we don't need to add a block of latency when using the Engine inside a plugin.
+
+---
+
+### Change
 Removed the TracktionThumbnail class.
 
 #### Possible Issues

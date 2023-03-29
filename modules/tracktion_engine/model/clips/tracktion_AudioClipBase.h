@@ -35,10 +35,12 @@ class AudioClipBase    : public Clip,
 public:
     //==============================================================================
     /** Creates a basic AudioClip. */
-    AudioClipBase (const juce::ValueTree&, EditItemID, Type, ClipTrack&);
+    AudioClipBase (const juce::ValueTree&, EditItemID, Type, ClipOwner&);
 
     /** Destructor. */
     ~AudioClipBase() override;
+
+    using Ptr = juce::ReferenceCountedObjectPtr<AudioClipBase>;
 
     //==============================================================================
     /** Returns the maximum length for this clip.
@@ -566,9 +568,9 @@ public:
 
     //==============================================================================
     /** @internal */
-    void setTrack (ClipTrack*) override;
+    void setParent (ClipOwner*) override;
     /** @internal */
-    bool canGoOnTrack (Track&) override;
+    bool canBeAddedTo (ClipOwner&) override;
     /** @internal */
     void changed() override;
 
@@ -638,7 +640,7 @@ protected:
     mutable WarpTimeManager::Ptr warpTimeManager;
     mutable std::unique_ptr<AudioSegmentList> audioSegmentList;
     std::unique_ptr<ClipEffects> clipEffects;
-    AsyncFunctionCaller asyncFunctionCaller;
+    mutable AsyncFunctionCaller asyncFunctionCaller;
 
     juce::AudioChannelSet activeChannels;
     void updateLeftRightChannelActivenessFlags();

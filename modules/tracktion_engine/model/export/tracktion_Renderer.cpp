@@ -20,9 +20,9 @@ void Renderer::turnOffAllPlugins (Edit& edit)
 
 namespace render_utils
 {
-    inline std::unique_ptr<Renderer::RenderTask> createRenderTask (Renderer::Parameters r, juce::String desc,
-                                                                   std::atomic<float>* progressToUpdate,
-                                                                   juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* thumbnail)
+    std::unique_ptr<Renderer::RenderTask> createRenderTask (Renderer::Parameters r, juce::String desc,
+                                                            std::atomic<float>* progressToUpdate,
+                                                            juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* thumbnail)
     {
         auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
         
@@ -265,6 +265,12 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
                                                                                            std::move (processState),
                                                                                            sourceToUpdate); });
 
+        if (! nodeRenderContext)
+        {
+            errorMessage = NEEDS_TRANS("Quit message or timeout occurred during render initialisation");
+            return true;
+        }
+
         if (! nodeRenderContext->getStatus().wasOk())
         {
             errorMessage = nodeRenderContext->getStatus().getErrorMessage();
@@ -456,6 +462,11 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
     turnOffAllPlugins (edit);
 
     return outputFile.existsAsFile();
+}
+
+bool Renderer::renderToFile (Edit& edit, const juce::File& f, bool useThread)
+{
+    return renderToFile ({}, f, edit, { 0_tp, edit.getLength() }, toBitSet (getAllTracks (edit)), true, {}, useThread);
 }
 
 juce::File Renderer::renderToFile (const juce::String& taskDescription, const Parameters& r)

@@ -158,6 +158,9 @@ public:
                               juce::Array<Clip*> clips = {},
                               bool useThread = true);
 
+    /** Renders an entire Edit to a file. */
+    static bool renderToFile (Edit&, const juce::File&, bool useThread = true);
+
     //==============================================================================
     /** @see measureStatistics()
     */
@@ -199,5 +202,12 @@ public:
         juce::ReferenceCountedArray<ProjectItem> items;
     };
 };
+
+namespace render_utils
+{
+std::unique_ptr<Renderer::RenderTask> createRenderTask (Renderer::Parameters r, juce::String desc,
+                                                        std::atomic<float>* progressToUpdate,
+                                                        juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* thumbnail);
+}
 
 }} // namespace tracktion { inline namespace engine

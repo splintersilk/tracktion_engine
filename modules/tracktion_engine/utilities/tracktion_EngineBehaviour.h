@@ -216,6 +216,9 @@ public:
     /** Returns the defaults to be applied to new clips. */
     virtual ClipDefaults getClipDefaults()                                          { return {}; }
 
+    /** Returns the defaults to be applied to new clips. */
+    virtual void newClipAdded (Clip&, [[ maybe_unused ]] bool fromRecording)        {}
+
     struct ControlSurfaces
     {
         bool mackieMCU = true;
@@ -229,8 +232,13 @@ public:
     };
     
     /** Return the control surfaces you want enabled in the engine */
-    
     virtual ControlSurfaces getDesiredControlSurfaces()                             { return {}; }
+
+    /** Restore a custom control surface from custom XML */
+    virtual ControlSurface* getCustomControlSurfaceForXML (ExternalControllerManager&, const juce::XmlElement&)
+    {
+        return nullptr;
+    }
 };
 
 }} // namespace tracktion { inline namespace engine

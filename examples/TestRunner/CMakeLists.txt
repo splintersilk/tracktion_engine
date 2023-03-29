@@ -9,7 +9,7 @@ endif()
 
 # If we are compiling for macOS we want to target OS versions down to 10.11
 if (APPLE)
-    set (CMAKE_OSX_DEPLOYMENT_TARGET "10.11" CACHE INTERNAL "")
+    set (CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE INTERNAL "")
 endif()
 
 # Compile with werror in release builds
@@ -48,7 +48,7 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
 
 set(SourceFiles
     ${CMAKE_PROJECT_NAME}.cpp
-    ../${CMAKE_PROJECT_NAME}.h)
+    ${CMAKE_PROJECT_NAME}.h)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SourceFiles})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX Source FILES ${SourceFiles})

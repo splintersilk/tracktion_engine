@@ -584,7 +584,7 @@ public:
         : SingleInputAudioReader (std::move (input)), numChannels ((int) source->getNumChannels())
     {
         timeStretcher.initialise (source->getSampleRate(), chunkSize, numChannels,
-                                  TimeStretcher::defaultMode, {}, true);
+                                  TimeStretcher::defaultMode, {}, false);
         inputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded());
         outputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded());
     }
@@ -596,7 +596,7 @@ public:
 
     void setPosition (SampleCount t) override
     {
-        if (std::abs (t - getReadPosition()) <= 1)
+        if (std::abs (t - getReadPosition()) <= 10)
             return;
 
         readPosition = (double) t;
@@ -1023,7 +1023,6 @@ public:
         // Apply offset first
         br = br + offset;
 
-        // First apply the looping
         return readLoopedBeatRange (br, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
     }
 
@@ -1697,9 +1696,12 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     // This won't work with invalid or non-existent files!
     jassert (! audioFile.isNull());
 
-    hash_combine (stateHash, editPositionTime);
-    hash_combine (stateHash, loopSectionTime);
-    hash_combine (stateHash, offsetTime.inSeconds());
+    auto removeRoundingError = [] (auto d) { return static_cast<float> (d.inSeconds()); };
+    hash_combine (stateHash, removeRoundingError (editPositionTime.getStart()));
+    hash_combine (stateHash, removeRoundingError (editPositionTime.getEnd()));
+    hash_combine (stateHash, removeRoundingError (loopSectionTime.getStart()));
+    hash_combine (stateHash, removeRoundingError (loopSectionTime.getEnd()));
+    hash_combine (stateHash, removeRoundingError (offsetTime));
     hash_combine (stateHash, speedRatio);
     hash_combine (stateHash, editItemID.getRawID());
     hash_combine (stateHash, channelsToUse.size());
@@ -1764,9 +1766,12 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     // This won't work with invalid or non-existent files!
     jassert (! audioFile.isNull());
 
-    hash_combine (stateHash, editPositionBeats);
-    hash_combine (stateHash, loopSectionBeats);
-    hash_combine (stateHash, offsetBeats.inBeats());
+    auto removeRoundingError = [] (auto d) { return static_cast<float> (d.inBeats()); };
+    hash_combine (stateHash, removeRoundingError (editPositionBeats.getStart()));
+    hash_combine (stateHash, removeRoundingError (editPositionBeats.getEnd()));
+    hash_combine (stateHash, removeRoundingError (loopSectionBeats.getStart()));
+    hash_combine (stateHash, removeRoundingError (loopSectionBeats.getEnd()));
+    hash_combine (stateHash, removeRoundingError (offsetBeats));
     hash_combine (stateHash, editItemID.getRawID());
     hash_combine (stateHash, channelsToUse.size());
     hash_combine (stateHash, destChannels.size());
@@ -1980,7 +1985,6 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
         && (sectionEditBeats.getEnd() <= editPositionBeats.getStart()
             || sectionEditBeats.getStart() >= editPositionBeats.getEnd()))
       return;
-
 
     auto destBuffer = pc.buffers.audio;
     const auto numFrames = destBuffer.getNumFrames();

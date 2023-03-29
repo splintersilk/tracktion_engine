@@ -19,7 +19,7 @@
 
   ID:               tracktion_engine
   vendor:           Tracktion Corporation
-  version:          2.0.0
+  version:          2.1.0
   name:             The Tracktion audio engine
   description:      Classes for manipulating and playing Tracktion projects
   website:          http://www.tracktion.com
@@ -281,6 +281,7 @@ namespace tracktion { inline namespace engine
     class Edit;
     class Track;
     class Clip;
+    class ClipOwner;
     class Plugin;
     struct AudioRenderContext;
     struct PluginRenderContext;
@@ -317,6 +318,7 @@ namespace tracktion { inline namespace engine
     struct ARADocumentHolder;
     class ClipEffects;
     class WaveAudioClip;
+    class ContainerClip;
     class CollectionClip;
     class MidiClip;
     class EditClip;
@@ -508,7 +510,6 @@ namespace tracktion { inline namespace engine
 #include "audio_files/tracktion_AudioFile.h"
 #include "model/edit/tracktion_SourceFileReference.h"
 #include "model/clips/tracktion_Clip.h"
-#include "model/edit/tracktion_EditUtilities.h"
 
 #include "utilities/tracktion_EngineBehaviour.h"
 #include "utilities/tracktion_Pitch.h"
@@ -538,6 +539,7 @@ namespace tracktion { inline namespace engine
 #include "playback/devices/tracktion_OutputDevice.h"
 
 #include "model/tracks/tracktion_TrackOutput.h"
+#include "model/clips/tracktion_ClipOwner.h"
 #include "model/tracks/tracktion_ClipTrack.h"
 #include "model/tracks/tracktion_AudioTrack.h"
 
@@ -558,6 +560,7 @@ namespace tracktion { inline namespace engine
 #include "model/clips/tracktion_ChordClip.h"
 #include "model/clips/tracktion_ClipEffects.h"
 #include "model/clips/tracktion_CollectionClip.h"
+#include "model/clips/tracktion_ContainerClip.h"
 #include "model/clips/tracktion_MarkerClip.h"
 #include "model/clips/tracktion_MidiClip.h"
 #include "model/clips/tracktion_ReverseRenderJob.h"
@@ -591,6 +594,8 @@ namespace tracktion { inline namespace engine
 #include "playback/devices/tracktion_MidiOutputDevice.h"
 #include "playback/devices/tracktion_WaveInputDevice.h"
 #include "playback/devices/tracktion_WaveOutputDevice.h"
+
+#include "model/edit/tracktion_EditUtilities.h"
 
 #if JUCE_ANDROID
  #include "playback/tracktion_ScopedSteadyLoad.h"

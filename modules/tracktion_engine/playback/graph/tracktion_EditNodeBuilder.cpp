@@ -361,6 +361,7 @@ std::unique_ptr<tracktion::graph::Node> createPluginNodeForTrack (Track&, TrackM
 
 std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDeviceInstance&, tracktion::graph::PlayHeadState&, const CreateNodeParams&);
 
+std::unique_ptr<tracktion::graph::Node> createNodeForClips (EditItemID, const juce::Array<Clip*>&, const TrackMuteState&, const CreateNodeParams&);
 
 //==============================================================================
 //==============================================================================
@@ -707,8 +708,46 @@ std::unique_ptr<tracktion::graph::Node> createNodeForStepClip (StepClip& clip, c
     return node;
 }
 
+std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerClip& clip, const TrackMuteState& trackMuteState, const CreateNodeParams& params)
+{
+    CRASH_TRACER
+    const auto& clips = clip.getClips();
+
+    if (clips.isEmpty())
+        return {};
+
+    // Combiner clip and the contained clips need their own, local PlayHeadState.
+    // This also needs to persist across graph rebuilds to maintain continuity.
+    // Once the ContainerClipNode has been initialised it will update it's children with its own ProcessState
+    auto node = makeNode<ContainerClipNode> (params.processState,
+                                             clip.itemID,
+                                             BeatRange (clip.getStartBeat(), clip.getEndBeat()),
+                                             clip.getOffsetInBeats(),
+                                             clip.getLoopRangeBeats(),
+                                             createNodeForClips (clip.itemID, clips, trackMuteState, params));
+
+    // Plugins
+    if (params.includePlugins)
+    {
+        if (auto pluginList = clip.getPluginList())
+        {
+            for (auto p : *pluginList)
+                p->initialiseFully();
+
+            node = createPluginNodeForList (*pluginList, nullptr, std::move (node), params.processState.playHeadState, params);
+        }
+    }
+
+    // Create FadeInOutNode
+    return createFadeNodeForClip (clip, std::move (node), params);
+}
+
 std::unique_ptr<tracktion::graph::Node> createNodeForClip (Clip& clip, const TrackMuteState& trackMuteState, const CreateNodeParams& params)
 {
+    // N.B. This must be checked first as a ContainerClip is an AudioClipBase
+    if (auto containerClip = dynamic_cast<ContainerClip*> (&clip))
+        return createNodeForContainerClip (*containerClip, trackMuteState, params);
+
     if (auto audioClip = dynamic_cast<AudioClipBase*> (&clip))
         return createNodeForAudioClip (*audioClip, false, params);
 
@@ -717,7 +756,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClip (Clip& clip, const Tra
 
     if (auto stepClip = dynamic_cast<StepClip*> (&clip))
         return createNodeForStepClip (*stepClip, trackMuteState, params);
-    
+
     return {};
 }
 
@@ -968,11 +1007,11 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
     
     node = createSidechainInputNodeForPlugin (plugin, std::move (node));
     node = tracktion::graph::makeNode<PluginNode> (std::move (node),
-                                                  plugin,
-                                                  params.sampleRate, params.blockSize,
-                                                  trackMuteState, params.processState,
-                                                  params.forRendering, params.includeBypassedPlugins,
-                                                  maxNumChannels);
+                                                   plugin,
+                                                   params.sampleRate, params.blockSize,
+                                                   trackMuteState, params.processState,
+                                                   params.forRendering, params.includeBypassedPlugins,
+                                                   maxNumChannels);
 
     return node;
 }

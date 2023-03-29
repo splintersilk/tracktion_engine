@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "common/Utilities.h"
-#include "common/Components.h"
+#include "../common/Utilities.h"
+#include "../common/Components.h"
 
 //==============================================================================
 class RecordingDemo  : public Component,
@@ -128,7 +128,7 @@ private:
             auto sel = selectionManager.getSelectedObject (0);
             if (auto clip = dynamic_cast<te::Clip*> (sel))
             {
-                clip->removeFromParentTrack();
+                clip->removeFromParent();
             }
             else if (auto track = dynamic_cast<te::Track*> (sel))
             {
