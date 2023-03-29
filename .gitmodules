@@ -1,4 +1,7 @@
 [submodule "modules/juce"]
 	path = modules/juce
-url=https://github.com/WeAreROLI/JUCE.git
+url=https://github.com/splintersilk/JUCE.git
 	branch = develop
+[submodule "modules/3rd_party/rubberband"]
+	path = modules/3rd_party/rubberband
+	url = https://github.com/breakfastquay/rubberband.git
