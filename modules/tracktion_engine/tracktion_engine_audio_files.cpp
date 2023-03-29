@@ -24,6 +24,8 @@ extern "C"
    #endif
 }
 
+#include "../../modules/tracktion_core/tracktion_TestConfig.h"
+
 #include "tracktion_engine.h"
 
 #include <string>
